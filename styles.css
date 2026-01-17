@@ -1,0 +1,125 @@
+:root {
+    --bg-color: #121212;
+    --surface-color: #1e1e1e;
+    --primary-color: #bb86fc;
+    --secondary-color: #03dac6;
+    --error-color: #cf6679;
+    --text-primary: #ffffff;
+    --text-secondary: #b0b0b0;
+    --font-main: 'Noto Sans', sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: var(--font-main);
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+header {
+    text-align: center;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+
+/* Визуализатор */
+.visualizer-container {
+    background-color: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #333;
+}
+
+canvas {
+    width: 100%;
+    height: auto;
+    display: block;
+    background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
+}
+
+.legend {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 0.8rem;
+    background: rgba(0,0,0,0.7);
+    padding: 5px 10px;
+    border-radius: 20px;
+}
+
+.legend-item {
+    margin-left: 10px;
+}
+.legend-item.original { color: var(--secondary-color); }
+.legend-item.user { color: var(--error-color); }
+
+/* Управление */
+.controls {
+    background-color: var(--surface-color);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.status-bar {
+    margin-bottom: 15px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.buttons-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+}
+
+.btn {
+    border: none;
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.1s, opacity 0.2s;
+}
+
+.btn:active { transform: scale(0.98); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.primary { background-color: var(--error-color); color: #000; } /* Красный для записи */
+.secondary { background-color: var(--secondary-color); color: #000; }
+.danger { background-color: #444; color: white; }
+.action { background-color: var(--primary-color); color: #000; width: 100%; margin-top: 10px;}
+
+/* Результаты */
+.results-panel {
+    background-color: var(--surface-color);
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid var(--primary-color);
+}
+
+.hidden { display: none; }
+
+.khanty-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--secondary-color);
+}

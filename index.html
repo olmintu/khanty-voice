@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khanty Voice - Обучение через пение</title>
+    
+    <!-- Подключение шрифта с поддержкой расширенной кириллицы -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Khanty Voice 🎤</h1>
+            <p>Тренажер произношения хантыйского языка</p>
+        </header>
+
+        <main>
+            <!-- Блок визуализации -->
+            <div class="visualizer-container">
+                <canvas id="visualizer" width="800" height="300"></canvas>
+                <div class="legend">
+                    <span class="legend-item original">🟢 Оригинал</span>
+                    <span class="legend-item user">🔴 Ваш голос</span>
+                </div>
+            </div>
+
+            <!-- Блок управления -->
+            <div class="controls">
+                <div class="status-bar" id="status">Готов к работе</div>
+                
+                <div class="buttons-row">
+                    <button id="btn-play-ref" class="btn secondary">▶ Прослушать образец</button>
+                    <button id="btn-record" class="btn primary">● Записать и Повторить</button>
+                    <button id="btn-stop" class="btn danger" disabled>■ Стоп</button>
+                </div>
+
+                <button id="btn-compare" class="btn action" disabled>📊 Сравнить результат</button>
+            </div>
+
+            <!-- Блок результатов -->
+            <div id="results" class="results-panel hidden">
+                <h2>Результат: <span id="score">--</span>%</h2>
+                <p id="recommendation">Здесь появятся рекомендации после сравнения.</p>
+            </div>
+            
+            <!-- Тестовый пример текста песни -->
+            <div class="lyrics-card">
+                <h3>Текст (Пример):</h3>
+                <p class="khanty-text">Па̄ӈк — мӯв ӆув ма̄нты...</p>
+                <p class="translation">(Здесь будет перевод строки)</p>
+            </div>
+        </main>
+
+        <footer>
+            <p>Разработано для сохранения языка</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
