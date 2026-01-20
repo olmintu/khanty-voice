@@ -22,11 +22,11 @@ body {
 
 .container {
     width: 100%;
-    max-width: 800px;
+    max-width: 600px; /* Чуть уже для мобилок */
     padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 15px;
 }
 
 header {
@@ -35,37 +35,101 @@ header {
     padding-bottom: 10px;
 }
 
+/* Урок и Навигация */
+.lesson-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.lesson-header h2 { margin: 0; font-size: 1.2rem; }
+
+.stepper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #2a2a2a;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+.nav-btn {
+    background: transparent;
+    border: 1px solid #555;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+/* Текст песни */
+.lyrics-display {
+    background-color: #222;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    border-left: 4px solid var(--primary-color);
+    min-height: 80px; /* Чтобы не скакало */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.khanty-text {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #fff;
+    margin: 0 0 8px 0;
+}
+.translation-text {
+    font-size: 0.95rem;
+    color: #aaa;
+    font-style: italic;
+    margin: 0;
+}
+.phonetic-wrapper {
+    font-size: 1.1rem;
+    color: #888;
+    margin: 5px 0 10px 0;
+    font-family: monospace; /* Чтобы выглядело как транскрипция */
+}
+
+.phonetic-text {
+    display: inline-block;
+}
+
+/* Стили для слов */
+.word {
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: all 0.3s;
+    display: inline-block;
+}
+
+/* Когда слово распознано верно */
+.word.matched {
+    color: #03dac6; /* Зеленый */
+    text-shadow: 0 0 5px rgba(3, 218, 198, 0.5);
+    font-weight: bold;
+}
+
+/* Опционально: подсветка хантыйских слов */
+.khanty-word {
+    display: inline-block;
+    padding: 0 2px;
+}
+.khanty-word.matched {
+    color: #bb86fc; /* Фиолетовый */
+}
 /* Визуализатор */
 .visualizer-container {
     background-color: #000;
     border-radius: 12px;
     overflow: hidden;
-    position: relative;
     border: 1px solid #333;
+    height: 150px;
 }
-
-canvas {
-    width: 100%;
-    height: auto;
-    display: block;
-    background: linear-gradient(180deg, #1a1a1a 0%, #000 100%);
-}
-
-.legend {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 0.8rem;
-    background: rgba(0,0,0,0.7);
-    padding: 5px 10px;
-    border-radius: 20px;
-}
-
-.legend-item {
-    margin-left: 10px;
-}
-.legend-item.original { color: var(--secondary-color); }
-.legend-item.user { color: var(--error-color); }
+canvas { width: 100%; height: 100%; display: block; }
 
 /* Управление */
 .controls {
@@ -74,52 +138,31 @@ canvas {
     border-radius: 12px;
     text-align: center;
 }
-
-.status-bar {
-    margin-bottom: 15px;
-    color: var(--text-secondary);
-    font-size: 0.9rem;
-}
-
-.buttons-row {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 15px;
-}
+.status-bar { margin-bottom: 15px; color: var(--text-secondary); font-size: 0.9rem; }
+.buttons-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 15px; }
 
 .btn {
     border: none;
-    padding: 12px 24px;
+    padding: 12px 20px;
     border-radius: 50px;
-    font-size: 1rem;
+    font-size: 0.9rem;
     cursor: pointer;
     font-weight: bold;
-    transition: transform 0.1s, opacity 0.2s;
+    transition: 0.2s;
 }
-
-.btn:active { transform: scale(0.98); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-.primary { background-color: var(--error-color); color: #000; } /* Красный для записи */
+.primary { background-color: var(--error-color); color: #000; }
 .secondary { background-color: var(--secondary-color); color: #000; }
 .danger { background-color: #444; color: white; }
-.action { background-color: var(--primary-color); color: #000; width: 100%; margin-top: 10px;}
+.action { background-color: var(--primary-color); color: #000; width: 100%; }
+.small { padding: 5px 10px; font-size: 0.8rem; }
 
 /* Результаты */
 .results-panel {
     background-color: var(--surface-color);
-    padding: 20px;
+    padding: 15px;
     border-radius: 12px;
     text-align: center;
-    border: 1px solid var(--primary-color);
+    border: 1px solid var(--secondary-color);
 }
-
 .hidden { display: none; }
-
-.khanty-text {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--secondary-color);
-}
