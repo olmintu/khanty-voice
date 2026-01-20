@@ -98,4 +98,4 @@ khanty-voice/
 
 ---
 
-**Автор:** [OlMI](https://github.com/olmintu)
+**Автор:** [olmintu](https://github.com/olmintu)
