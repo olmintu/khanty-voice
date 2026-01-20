@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Khanty Voice - Обучение через пение</title>
     
-    <!-- Подключение шрифта с поддержкой расширенной кириллицы -->
+    <!-- Шрифт Noto Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -21,47 +21,73 @@
         </header>
 
         <main>
-            <!-- Блок визуализации -->
-            <div class="visualizer-container">
-                <canvas id="visualizer" width="800" height="300"></canvas>
-                <div class="legend">
-                    <span class="legend-item original">🟢 Оригинал</span>
-                    <span class="legend-item user">🔴 Ваш голос</span>
-                </div>
+            <!-- Заголовок урока -->
+            <div class="lesson-header">
+                <h2>Хантыйская колыбельная</h2>
+                <button id="btn-full-song" class="btn secondary small">🎵 Слушать целиком</button>
             </div>
 
-            <!-- Блок управления -->
+            <!-- Навигация (Шаги) -->
+            <div class="stepper">
+                <button id="btn-prev" class="nav-btn">← Назад</button>
+                <span id="step-indicator">Фраза 1 из 7</span>
+                <button id="btn-next" class="nav-btn">Вперед →</button>
+            </div>
+
+            <!-- Текст песни -->
+<div class="lyrics-display">
+    <!-- Хантыйский -->
+    <div id="lyrics-original" class="khanty-text">...</div>
+    
+    <!-- Фонетика (Транскрипция) -->
+    <div class="phonetic-wrapper">
+        [ <span id="lyrics-phonetic" class="phonetic-text">...</span> ]
+    </div>
+
+    <!-- Перевод -->
+    <p id="lyrics-translation" class="translation-text">...</p>
+</div>
+
+
+            <!-- Скрытый плеер -->
+            <audio id="audio-player" crossorigin="anonymous"></audio>
+
+            <!-- Визуализация -->
+            <div class="visualizer-container">
+                <canvas id="visualizer" width="800" height="300"></canvas>
+            </div>
+
+            <!-- Управление -->
             <div class="controls">
-                <div class="status-bar" id="status">Готов к работе</div>
+                <div class="status-bar" id="status">Загрузка урока...</div>
                 
                 <div class="buttons-row">
-                    <button id="btn-play-ref" class="btn secondary">▶ Прослушать образец</button>
-                    <button id="btn-record" class="btn primary">● Записать и Повторить</button>
+                    <button id="btn-play-ref" class="btn secondary">▶ Слушать фразу</button>
+                    <button id="btn-record" class="btn primary">● Повторить (Запись)</button>
                     <button id="btn-stop" class="btn danger" disabled>■ Стоп</button>
                 </div>
 
-                <button id="btn-compare" class="btn action" disabled>📊 Сравнить результат</button>
+                <button id="btn-compare" class="btn action" disabled>📊 Проверить результат</button>
             </div>
 
-            <!-- Блок результатов -->
-            <div id="results" class="results-panel hidden">
-                <h2>Результат: <span id="score">--</span>%</h2>
-                <p id="recommendation">Здесь появятся рекомендации после сравнения.</p>
-            </div>
-            
-            <!-- Тестовый пример текста песни -->
-            <div class="lyrics-card">
-                <h3>Текст (Пример):</h3>
-                <p class="khanty-text">Па̄ӈк — мӯв ӆув ма̄нты...</p>
-                <p class="translation">(Здесь будет перевод строки)</p>
-            </div>
+            <!-- Результаты -->
+<div id="results" class="results-panel hidden">
+    <h2>Общий результат: <span id="score">--</span>%</h2>
+    
+    <div class="debug-info" style="margin: 10px 0; font-size: 0.9rem; color: #aaa;">
+        <p>Google услышал: <span id="google-heard" style="color: #fff; font-weight: bold;">...</span></p>
+    </div>
+
+    <p id="recommendation">...</p>
+</div>
+
         </main>
 
         <footer>
-            <p>Разработано для сохранения языка</p>
+            <p>Khanty Voice Project • 2025</p>
         </footer>
     </div>
-
+    <script src="songs.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
