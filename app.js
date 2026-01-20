@@ -8,7 +8,7 @@ let isPlayingPhrase = false;
 let activeSourceNode = null; 
 let fullSongAudio = null;
 
-// --- GOOGLE SPEECH ---
+// --- GOOGLE SPEECH (DEBUG VERSION) ---
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 let recognition = null;
 let recognizedText = "";
@@ -16,13 +16,58 @@ let recognizedText = "";
 if (SpeechRecognition) {
     recognition = new SpeechRecognition();
     recognition.lang = 'ru-RU'; 
-    recognition.continuous = false; 
-    recognition.interimResults = false;
-    recognition.onresult = (e) => {
-        recognizedText = e.results[0][0].transcript.toLowerCase();
-        console.log("Heard:", recognizedText);
+    recognition.continuous = true; 
+    recognition.interimResults = true; 
+
+    // Когда Гугл начинает слушать
+    recognition.onstart = () => {
+        console.log("🟢 Google Speech: Слушаю...");
     };
+
+    // Когда приходит результат (даже частичный)
+    recognition.onresult = (e) => {
+        let interimTranscript = '';
+        let finalTranscript = '';
+
+        for (let i = e.resultIndex; i < e.results.length; ++i) {
+            if (e.results[i].isFinal) {
+                finalTranscript += e.results[i][0].transcript;
+            } else {
+                interimTranscript += e.results[i][0].transcript;
+            }
+        }
+        
+        // Мы берем или финал, или черновик - что есть
+        recognizedText = (finalTranscript + interimTranscript).toLowerCase();
+        
+        console.log("👂 Google heard:", recognizedText);
+        
+        // Сразу пишем на экран, чтобы ты видел
+        if (document.getElementById('google-heard')) {
+            document.getElementById('google-heard').innerText = recognizedText;
+        }
+    };
+
+    // Если ошибка
+    recognition.onerror = (e) => {
+        console.error("🔴 Google Error:", e.error);
+        if (e.error === 'not-allowed') alert("Разрешите доступ к микрофону для Google!");
+        if (e.error === 'network') alert("Нужен интернет для распознавания!");
+    };
+    
+    // Если сам отключился
+    recognition.onend = () => {
+        console.log("⚪ Google Speech: Отключился.");
+        // Если запись еще идет, а Гугл упал - перезапустим его!
+        if (isRecording) {
+            console.log("🔄 Перезапуск Google...");
+            try { recognition.start(); } catch(e){}
+        }
+    };
+} else {
+    alert("Ваш браузер не поддерживает Speech API. Попробуйте Chrome.");
 }
+
 
 // --- АУДИО ---
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -152,7 +197,7 @@ document.getElementById('btn-record').addEventListener('click', async () => {
             userAudioBlob = new Blob(audioChunks, { type: 'audio/webm' });
             stream.getTracks().forEach(t => t.stop());
             source.disconnect();
-            if (recognition) try { recognition.stop(); } catch(e){}
+            
         };
         mediaRecorder.start();
         isRecording = true;
@@ -184,27 +229,46 @@ function stopRecording() {
 }
 
 // --- 4. СРАВНЕНИЕ (С ПОДСВЕТКОЙ) ---
-document.getElementById('btn-compare').addEventListener('click', async () => {
-    if (!userAudioBlob) return;
-    statusText.innerText = "🧮 Анализ...";
-    document.getElementById('results').classList.remove('hidden');
+document.getElementById('btn-compare').addEventListener('click', () => {
+    // 1. Сначала мягко останавливаем Гугл (если он еще слушает)
+    if (recognition) {
+        try { recognition.stop(); } catch(e){}
+    }
 
-    if (googleHeardDisplay) googleHeardDisplay.innerText = recognizedText || "...";
-
-    const arrayBuffer = await userAudioBlob.arrayBuffer();
-    const userBuffer = await audioCtx.decodeAudioData(arrayBuffer);
-    const userData = analyzeAudioBuffer(userBuffer);
+    statusText.innerText = "🧮 Ждем ответ от Google...";
     
-    // Получаем правильный текст
-    const targetGoogleText = LESSON_DATA[currentStep].google_text || "";
+    // 2. Делаем паузу 1 секунду перед анализом.
+    // Это критически важно! Гугл возвращает финальный текст через 0.5-1с после тишины.
+    setTimeout(async () => {
+        if (!userAudioBlob) {
+            statusText.innerText = "❌ Нет записи для проверки";
+            return;
+        }
 
-    // Запускаем расчет + подсветку
-    const result = calculateScore(userData, currentTargetData, recognizedText, targetGoogleText);
-    
-    scoreDisplay.innerText = result.score;
-    recDisplay.innerText = result.text;
-    statusText.innerText = "Готово.";
+        statusText.innerText = "🧮 Анализирую...";
+        document.getElementById('results').classList.remove('hidden');
+
+        // Обновляем текст на экране (финальная проверка)
+        if (googleHeardDisplay) googleHeardDisplay.innerText = recognizedText || "(тишина)";
+
+        // 3. Стандартный анализ аудио
+        const arrayBuffer = await userAudioBlob.arrayBuffer();
+        const userBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+        const userData = analyzeAudioBuffer(userBuffer);
+        
+        // Получаем правильный текст
+        const targetGoogleText = LESSON_DATA[currentStep].google_text || "";
+
+        // 4. Считаем баллы
+        const result = calculateScore(userData, currentTargetData, recognizedText, targetGoogleText);
+        
+        scoreDisplay.innerText = result.score;
+        recDisplay.innerText = result.text;
+        statusText.innerText = "Готово.";
+        
+    }, 1000); // 1000 мс = 1 секунда задержки
 });
+
 
 // --- НАВИГАЦИЯ ---
 document.getElementById('btn-next').addEventListener('click', () => {
